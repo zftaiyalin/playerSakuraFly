@@ -9,16 +9,46 @@
 #import "AppDelegate.h"
 #import "MainViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "YYModel.h"
+#import "RedBoxModel.h"
+#import "AppUnitl.h"
+#import "NewViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UMConfigInstance.appKey = @"592bbcf63eae25316d00206e";
+    UMConfigInstance.channelId = @"App Store";
+    [MobClick startWithConfigure:UMConfigInstance];//配置以上参数后调用此方法初始化SDK！
+    
+    
+    
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设置格式：zzz表示时区
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
+    //NSDate转NSString
+    NSString *currentDateString = [dateFormatter stringFromDate:[NSDate date]];
+    NSError *error = nil;
+    
+    NSString *ss = [NSString stringWithFormat:@"http://opmams01o.bkt.clouddn.com/stickhero.json?v=%@",currentDateString];
+    NSURL *xcfURL = [NSURL URLWithString:ss];
+    NSString *htmlString = [NSString stringWithContentsOfURL:xcfURL encoding:NSUTF8StringEncoding error:&error];
+    
+    AppModel *model = [AppModel yy_modelWithJSON:htmlString];
+    
+    [AppUnitl sharedManager].ssmodel = model;
+    [AppUnitl sharedManager].ssmodel.appstatus.isShow = YES;
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
 
-    MainViewController *mainViewCon = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
-    self.window.rootViewController = mainViewCon;
+//    MainViewController *mainViewCon = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
+//    self.window.rootViewController = mainViewCon;
+    
+    self.window.rootViewController =[[UINavigationController alloc] initWithRootViewController:[[NewViewController alloc] init]] ;
+    [self.window makeKeyAndVisible];
     
     [self.window makeKeyAndVisible];
     return YES;

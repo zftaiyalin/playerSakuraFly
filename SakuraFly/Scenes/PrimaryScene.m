@@ -35,7 +35,9 @@ static const uint32_t flowerCategory = 0x1 << 4;
 {
     [super initalize];
     SKSpriteNode* background=[SKSpriteNode spriteNodeWithImageNamed:@"sky.png"];
-    background.position=CGPointMake(background.size.width/2, background.size.height/2);
+    background.position=CGPointMake(self.size.width/2, self.size.height/2);
+    background.xScale = self.size.width/320.0;
+    background.yScale = self.size.height/568.0;
     [self addChild:background];
     self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
     self.physicsBody.categoryBitMask = edgeCategory;
